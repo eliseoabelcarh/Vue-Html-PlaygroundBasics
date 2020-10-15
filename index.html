@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <title>Vue with Html Basics</title>
+</head>
+
+<body style="margin: auto; padding: 30px;">
+    <div class="card-deck">
+        <div id="vue-app1" class="card p-3 " style="width: 23rem;">
+            <h5 class="card-header mb-3 text-center">Basics 1</h5>
+            <br>
+            <div v-once>Directiva v-once nombre no cambia: {{ name }}</div>
+            <br>
+            <div>Sin usar directivas: {{ name }}</div>
+            <br>
+            <div>Saludos: {{ showName() }}</div>
+            <br>
+            <button class="btn btn-primary" v-bind:disabled="retornarBotonHabilitado()" v-on:click="cambiarNombre">
+                Cambiar nombre </button>
+            <br>
+            <button class="btn btn-secondary" v-on:click="habilitarODeshabilitarBoton()"> habilitar/Deshabilitar Boton
+            </button>
+            <br>
+            <div style="background-color: gainsboro;" class="p-3">Bloque oculto dependiendo de condición:
+                <p v-if="retornarValorBool()" class="h5">Now you see me!!</p>
+                <button class="btn" v-on:click="cambiarValorBool"> Cambiar valorBool </button>
+            </div>
+            <br>
+            <div>función computada ==> {{ funcionComputada }}</div>
+            <br>
+            <a v-bind:href="someLink">Link a google</a>
+        </div>
+
+
+
+        <div id="vue-app2" class="card p-3 " style="width: 23rem;">
+            <h5 class="card-header mb-3 text-center">Basics 2</h5>
+            <br>
+            <div>Usando API de "{{apiURL}}"</div>
+            <div>Sólo sabe responder Sí o No</div>
+            <br>
+            <input class="form-control mb-2" type="text" v-model="pregunta" placeholder="Escribe una pregunta" />
+            <div>Pregunta: {{pregunta}}</div>
+            <br>
+
+            <div class="text-center">
+                <div>Respuesta: <p class="font-weight-bold">{{respuesta}}</p>
+                </div>
+                <div v-if="respuestaImagenURL">
+                    <img style="height: 10rem;width: 12rem;" v-bind:src="respuestaImagenURL">
+                </div>
+                <div v-else>... Esperando respuesta para cargar imagen</div>
+            </div>
+            <br>
+            <div>
+                <div>
+                    <ul class="list-group">
+                        <li v-bind:class="[classObject, classObject2]">
+                            Elemento1 con class dinámico
+                            <span class="badge badge-primary badge-pill">{{contador1}}</span>
+                        </li>
+                        <li v-bind:class="classObject">
+                            <button v-on:click="decFont" class="badge badge-primary badge-pill">-</button>
+                            <div class="font-weight-bold" v-bind:style="stylesObjeto">
+                                Cambia tamaño de Letra
+                            </div>
+                            <button v-on:click="incFont" class="badge badge-primary badge-pill">+</button>
+                        </li>
+                        <li v-bind:class="classObject">
+                            <button v-on:click="toggleClassToDanger" class="btn btn-primary">Toggle Text Danger</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="vue-app3" class="card p-3 " style="width: 23rem;">
+            <h5 class="card-header mb-3 text-center">Basics 3</h5>
+            <br>
+            <div class="font-weight-bold mb-3">Listando con v-for</div>
+            <div>Listando una Colección</div>
+            <div>
+                <button v-on:click="filtrarTipoA" class="btn btn-secondary">Filtrar sólo tipo A</button>
+                <button v-on:click="reset" class="btn btn-terciary">Reset</button>
+                <ul class="list-group">
+                    <li v-for="(item, index) in lista"
+                        class="list-group-item d-flex justify-content-between align-items-center">
+                        {{index+1}}.- {{item.contenido}} tipo:{{item.tipo}}
+                    </li>
+                </ul>
+            </div>
+            <button v-on:click="addElemento" class="btn btn-primary">Add Elemento</button>
+            <div class="mt-3">Listando valores de Objeto</div>
+            <div>
+                <ul class="list-group">
+                    <li v-for="(value,key, index) in persona" v-bind:key="key"
+                        class="list-group-item d-flex justify-content-between align-items-center">
+                        {{index+1}}.- {{key}}: {{value}}
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div id="vue-app4" class="card p-3 " style="width: 23rem;">
+            <h5 class="card-header mb-3 text-center">Basics 4</h5>
+            <br>
+            <div class="font-weight-bold mb-3">Listando con v-for</div>
+            <div class="font-weight-bold mb-3">Lista de Tareas </div>
+
+            <ul class="list-group">
+                <li v-for="(item, index) in tareas"
+                    class="list-group-item d-flex justify-content-between align-items-center">
+                    {{item}}
+                    <button v-on:click="removeTarea(index)" type="button" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+            </ul>
+            <br>
+            <input class="form-control mb-2" type="text" v-model="tareaNueva" placeholder="Agrega un tarea" />
+            <div>{{tareaNueva}}</div>
+            <button v-on:click="addTarea">Add Tarea</button>
+
+            <br>
+            <div class="mb-3">Usando arrow function en v-on:click</div>
+            <div class="font-weight-bold mb-3">contador: {{contador}}</div>
+            <button v-on:click="() => contador+=2" class="btn btn-primary">Agregar 2 a contador</button>
+
+            <br>
+            <br>
+            <div> 
+                <div class="font-weight-bold mb-3">check para agregar a lista</div>
+                <input type="checkbox" id="Alberto" value="Alberto" v-model="nombresLista">
+                <label for="Alberto">Alberto</label>
+                <input type="checkbox" id="Jose" value="Jose" v-model="nombresLista">
+                <label for="Jose">Jose</label>
+                <input type="checkbox" id="Santiago" value="Santiago" v-model="nombresLista">
+                <label for="Santiago">Santiago</label>
+                <br>
+
+            </div>
+            <div>
+               
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Lista: </li>
+                    <li v-for="item in nombresLista"
+                        class="list-group-item d-flex justify-content-between align-items-center">
+                        {{item}}
+                    </li>
+                </ul>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <script src="vueApp1.js"></script>
+    <script src="vueApp2.js"></script>
+    <script src="vueApp3.js"></script>
+    <script src="vueApp4.js"></script>
+</body>
+
+</html>
